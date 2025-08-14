@@ -1,0 +1,7 @@
+$version 1.0
+
+colorstatistic
+{
+  #00000000 130560
+};
+// color statistic containing 1 entries
