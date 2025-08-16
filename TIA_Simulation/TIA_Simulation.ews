@@ -2,8 +2,7 @@ $version 1.0
 
 attr active = Application::HMI;
 attr callStackMonitor_Show = false;
-attr connectInspectors = false;
-attr currentCodeInspector = Core::Group.Add;
+attr connectInspectors = true;
 attr debug_TrackUpdates = false;
 attr extractDoc_ClassOverview = true;
 attr extractDoc_DeleteOldFiles = false;
@@ -33,8 +32,8 @@ view Project
   attr enableGrid = true;
   attr enableWireMode = false;
   attr grid = 10;
-  attr scrollTo = <-7,-7>;
-  attr zoom = 1.0;
+  attr scrollTo = <-7,-41>;
+  attr zoom = 1.25;
 }
 
 view unit Application
@@ -47,25 +46,63 @@ view unit Application
   attr zoom = 1.5;
 }
 
+view class Application::MainPage
+{
+  attr enableWireMode = false;
+  attr scrollTo = <-7,-251>;
+  attr zoom = 1.25;
+}
+
 view class Application::HMI
 {
   attr enableWireMode = false;
+  attr scrollTo = <-430,-268>;
+  attr zoom = 1.25;
+}
+
+view class Application::WelcomePage
+{
+  attr enableWireMode = false;
   attr scrollTo = <-7,-7>;
-  attr zoom = 1.5;
+  attr zoom = 2.0;
 }
 
 codeview Core::Group.Add
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <16,0>;
-  attr codeSelStart = <16,0>;
+  attr codeSelEnd = <2,1>;
+  attr codeSelStart = <2,1>;
 }
 
-codeview Application::HMI.ConfigureText
+codeview Application::MainPage.Init
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <50,0>;
-  attr codeSelStart = <50,0>;
+  attr codeSelEnd = <35,3>;
+  attr codeSelStart = <35,3>;
+}
+
+codeview Core::Group.DismissDialog
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,21>;
+  attr codeSelEnd = <2,26>;
+  attr codeSelStart = <2,26>;
+}
+
+codeview Application::WelcomePage.onTimer
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <15,7>;
+  attr codeSelStart = <15,7>;
+}
+
+codeview Application::HMI.onTimer
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <0,0>;
+  attr codeSelStart = <0,0>;
 }
