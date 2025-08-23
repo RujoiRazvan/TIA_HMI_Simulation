@@ -108,7 +108,7 @@ profile Profile : STM.STM32.RGB565
   attr Verbose = false;
   attr ScreenSize = <480,272>;
   attr Optimization = High;
-  attr ApplicationClass = Application::HMI;
+  attr ApplicationClass = Application::MainPage;
   attr CleanOutputDirectories = false;
   attr FontConversion = Windows;
   attr OutputFileNameExtension = c;
