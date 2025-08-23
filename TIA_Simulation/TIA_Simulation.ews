@@ -3,7 +3,7 @@ $version 1.0
 attr active = Application::MainPage;
 attr callStackMonitor_Show = false;
 attr connectInspectors = false;
-attr currentCodeInspector = Application::MainPage.onSlide;
+attr currentCodeInspector = Application::MainPage.onSlide1;
 attr debug_TrackUpdates = false;
 attr extractDoc_ClassOverview = true;
 attr extractDoc_DeleteOldFiles = false;
@@ -47,14 +47,14 @@ view unit Application
 view class Application::MainPage
 {
   attr enableWireMode = false;
-  attr scrollTo = <-7,-167>;
-  attr zoom = 0.75;
+  attr scrollTo = <-294,-39>;
+  attr zoom = 1.0;
 }
 
 view class Application::HMI
 {
   attr enableWireMode = false;
-  attr scrollTo = <-7,73>;
+  attr scrollTo = <-7,-7>;
   attr zoom = 1.0;
 }
 
@@ -94,6 +94,14 @@ codeview Application::MainPage.onSlide
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <49,0>;
-  attr codeSelStart = <49,0>;
+  attr codeSelEnd = <0,0>;
+  attr codeSelStart = <0,0>;
+}
+
+codeview Application::MainPage.onSlide1
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <31,9>;
+  attr codeSelStart = <31,9>;
 }

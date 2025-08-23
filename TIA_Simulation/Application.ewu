@@ -38,6 +38,28 @@ class MainPage : Core::Root
     preset Visible = true;
   }
 
+  $rect <20,20,160,60>
+  object Application::SystemInfo SystemInfo
+  {
+    preset Bounds = <0,0,480,272>;
+    preset Enabled = false;
+    preset Visible = false;
+  }
+
+  $rect <20,20,160,60>
+  object Core::SlideTouchHandler SlideTouchHandler
+  {
+    preset Bounds = <0,200,480,272>;
+    preset OnSlide = onSlide;
+  }
+
+  $rect <20,20,160,60>
+  object Core::SlideTouchHandler SlideTouchHandler1
+  {
+    preset Bounds = <221,64,480,136>;
+    preset OnSlide = onSlide1;
+  }
+
   $rect <510,140,710,180>
   slot onWelcomePageTimer
   {
@@ -54,7 +76,7 @@ class MainPage : Core::Root
     preset Enabled = true;
   }
 
-  $rect <500,240,700,280>
+  $rect <510,220,710,260>
   slot onSlide
   {
     if (SlideTouchHandler.Offset.x < 0 && HMI.Visible)
@@ -75,19 +97,25 @@ class MainPage : Core::Root
 
   }
 
-  $rect <20,20,160,60>
-  object Application::SystemInfo SystemInfo
+  $rect <510,260,710,300>
+  slot onSlide1
   {
-    preset Bounds = <0,0,480,272>;
-    preset Enabled = false;
-    preset Visible = false;
-  }
+    if (SlideTouchHandler1.Offset.x < 0 && HMI.Visible)
+    {
+      SystemInfo.Enabled = true;
+      SystemInfo.Visible = true;
+      HMI.Enabled = false;
+      HMI.Visible = false;
+      PresentDialog( SystemInfo, null, null, null, null, null, null, null, null, false );
+    }
+    else if (SlideTouchHandler1.Offset.x > 0 && HMI.Visible == false)
+    {
+      SystemInfo.Enabled = false;
+      SystemInfo.Visible = false;
+      HMI.Enabled = true;
+      HMI.Visible = true;
+    }
 
-  $rect <20,20,160,60>
-  object Core::SlideTouchHandler SlideTouchHandler
-  {
-    preset Bounds = <0,0,480,272>;
-    preset OnSlide = onSlide;
   }
 }
 
