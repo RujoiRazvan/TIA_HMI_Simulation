@@ -51,6 +51,10 @@ class MainPage : Core::Root
   {
     preset Bounds = <0,200,480,272>;
     preset OnSlide = onSlide;
+    preset OnEnd = onEnd;
+    preset OnStart = onStart;
+    preset RubberBandEffectDuration = 0;
+    preset RetargetDelay = 1000;
   }
 
   $rect <20,20,160,60>
@@ -58,6 +62,11 @@ class MainPage : Core::Root
   {
     preset Bounds = <221,64,480,136>;
     preset OnSlide = onSlide1;
+    preset OnEnd = onEnd;
+    preset OnStart = onStart;
+    preset RubberBandEffectDuration = 500;
+    preset RubberBandScrolling = false;
+    preset RetargetDelay = 1000;
   }
 
   $rect <510,140,710,180>
@@ -79,43 +88,79 @@ class MainPage : Core::Root
   $rect <510,220,710,260>
   slot onSlide
   {
-    if (SlideTouchHandler.Offset.x < 0 && HMI.Visible)
-    {
-      SystemInfo.Enabled = true;
-      SystemInfo.Visible = true;
-      HMI.Enabled = false;
-      HMI.Visible = false;
-      PresentDialog( SystemInfo, null, null, null, null, null, null, null, null, false );
-    }
-    else if (SlideTouchHandler.Offset.x > 0 && HMI.Visible == false)
-    {
-      SystemInfo.Enabled = false;
-      SystemInfo.Visible = false;
-      HMI.Enabled = true;
-      HMI.Visible = true;
-    }
-
+    changePage(SlideTouchHandler);
   }
 
   $rect <510,260,710,300>
   slot onSlide1
   {
-    if (SlideTouchHandler1.Offset.x < 0 && HMI.Visible)
+    changePage(SlideTouchHandler1);
+  }
+
+  $rect <20,20,160,60>
+  object Application::MeasuredValues MeasuredValues
+  {
+    preset Bounds = <0,0,480,272>;
+    preset Enabled = false;
+    preset Visible = false;
+  }
+
+  $rect <730,220,930,260>
+  method void changePage( arg Core::SlideTouchHandler touchHandler )
+  {
+    if (touchHandler.Offset.x < 0 && HMI.Visible && readyToSlide)
     {
-      SystemInfo.Enabled = true;
-      SystemInfo.Visible = true;
+      // Go from HMI to Measured Values
+      MeasuredValues.Enabled = true;
+      MeasuredValues.Visible = true;
       HMI.Enabled = false;
       HMI.Visible = false;
-      PresentDialog( SystemInfo, null, null, null, null, null, null, null, null, false );
+      readyToSlide = false;
+      PresentDialog( MeasuredValues, null, null, null, null, null, null, null, null, false );
     }
-    else if (SlideTouchHandler1.Offset.x > 0 && HMI.Visible == false)
+    else if (touchHandler.Offset.x < 0 && MeasuredValues.Visible && readyToSlide)
     {
+      // Go from Measured Values to SystemInfo
+      MeasuredValues.Enabled = false;
+      MeasuredValues.Visible = false;
+      readyToSlide = false;
+      SystemInfo.Enabled = true;
+      SystemInfo.Visible = true;
+    }
+    else if (touchHandler.Offset.x > 0 && SystemInfo.Visible && readyToSlide)
+    {
+      // Go from System Info to Measured Values
+      MeasuredValues.Enabled = true;
+      MeasuredValues.Visible = true;
       SystemInfo.Enabled = false;
       SystemInfo.Visible = false;
+      readyToSlide = false;
+    }
+    else if (touchHandler.Offset.x > 0 && MeasuredValues.Visible && readyToSlide)
+    {
+      // Go from Measured Values to HMI
+      MeasuredValues.Enabled = false;
+      MeasuredValues.Visible = false;
       HMI.Enabled = true;
       HMI.Visible = true;
+      readyToSlide = false;
     }
 
+  }
+
+  $rect <510,310,710,350>
+  slot onStart
+  {
+    readyToSlide = true;
+  }
+
+  $rect <510,410,710,450>
+  var bool readyToSlide = false;
+
+  $rect <504,354,704,394>
+  slot onEnd
+  {
+    readyToSlide = true;
   }
 }
 
@@ -860,7 +905,7 @@ resource Resources::Bitmap TurnedOffLed
   attr bitmapmode Mode = Default;
 }
 
-$rect <20,200,220,240>
+$rect <20,260,220,300>
 $output false
 class SystemInfo : Core::Group
 {
@@ -1026,9 +1071,9 @@ class SystemInfo : Core::Group
   }
 
   $rect <20,20,160,60>
-  object Views::Text Text3
+  object Views::Text Title
   {
-    preset Bounds = <113,0,347,30>;
+    preset Bounds = <134,2,346,32>;
     preset OverflowWarning = false;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
@@ -1044,6 +1089,63 @@ class SystemInfo : Core::Group
   {
     attr Bounds = <900,0,1200,200>;
   }
+
+  $rect <20,20,160,60>
+  object Views::Text MLFB
+  {
+    preset Bounds = <13,63,298,93>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "MLFB: 3RK1304 - ";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text InstallationDate
+  {
+    preset Bounds = <16,96,307,126>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Installation Date: 23 July 2025";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Author
+  {
+    preset Layout = Core::Layout[AlignToLeft, AlignToTop];
+    preset Bounds = <14,150,201,180>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Author: Test TEST";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Location
+  {
+    preset Bounds = <19,123,310,153>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Location: Test Laboratory, 14.1";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
 }
 
 // Images
@@ -1052,7 +1154,7 @@ note group Note
   attr Bounds = <490,20,790,230>;
 }
 
-$rect <20,260,220,300>
+$rect <20,200,220,240>
 $output false
 class MeasuredValues : Core::Group
 {
@@ -1217,23 +1319,88 @@ class MeasuredValues : Core::Group
     preset Bounds = <0,0,480,272>;
   }
 
-  $rect <20,20,160,60>
-  object Views::Text Text3
-  {
-    preset Bounds = <113,0,347,30>;
-    preset OverflowWarning = false;
-    preset ColorBL = #000000FF;
-    preset ColorBR = #000000FF;
-    preset ColorTR = #000000FF;
-    preset ColorTL = #000000FF;
-    preset String = "System Info";
-    preset Font = Resources::FontLarge;
-    preset Color = #000000FF;
-  }
-
   // WelcomePage Configuration
   note group Note
   {
     attr Bounds = <900,0,1200,200>;
   }
+
+  $rect <20,20,160,60>
+  object Views::Text Title
+  {
+    preset Bounds = <118,2,360,32>;
+    preset OverflowWarning = false;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Measured Values";
+    preset Font = Resources::FontLarge;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text NumberOfCWrotations
+  {
+    preset Bounds = <18,64,202,94>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Total CW rotations: ";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text NumberOfCCWrotations
+  {
+    preset Bounds = <18,94,214,124>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Total CCW rotations: ";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text OperatingHours
+  {
+    preset Bounds = <18,221,347,251>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "Operating Hours: ";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <510,20,710,60>
+  object Core::Timer measureOperatingHours
+  {
+    preset OnTrigger = onMeasureOperatingHours;
+    preset Enabled = true;
+  }
+
+  $rect <510,90,710,130>
+  slot onMeasureOperatingHours
+  {
+    ElapsedSeconds = ElapsedSeconds + 1;
+
+    var int32 hours = (ElapsedSeconds / 3600);
+    var int32 minutes = (ElapsedSeconds % 3600) / 60;
+    var int32 seconds = ElapsedSeconds % 60;
+    OperatingHours.String = "Operating Hours: " + string(hours) + " h " + 
+                            string(minutes) + " m " + string(seconds) + " s" ;
+    //trace seconds;
+  }
+
+  $rect <510,140,710,180>
+  var int32 ElapsedSeconds;
 }

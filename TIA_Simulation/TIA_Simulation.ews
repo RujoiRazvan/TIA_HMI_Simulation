@@ -1,9 +1,9 @@
 $version 1.0
 
-attr active = Application::MainPage;
+attr active = Application::MeasuredValues;
 attr callStackMonitor_Show = false;
 attr connectInspectors = false;
-attr currentCodeInspector = Application::MainPage.onSlide1;
+attr currentCodeInspector = Application::MeasuredValues.onMeasureOperatingHours;
 attr debug_TrackUpdates = false;
 attr extractDoc_ClassOverview = true;
 attr extractDoc_DeleteOldFiles = false;
@@ -47,7 +47,7 @@ view unit Application
 view class Application::MainPage
 {
   attr enableWireMode = false;
-  attr scrollTo = <-294,-39>;
+  attr scrollTo = <-63,-39>;
   attr zoom = 1.0;
 }
 
@@ -58,28 +58,18 @@ view class Application::HMI
   attr zoom = 1.0;
 }
 
-codeview Application::SystemInfo.UpdateViewState
+view class Application::SystemInfo
 {
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <0,0>;
-  attr codeSelStart = <0,0>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,-87>;
+  attr zoom = 1.0;
 }
 
-codeview Application::SystemInfo.UpdateLayout
+view class Application::MeasuredValues
 {
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <0,0>;
-  attr codeSelStart = <0,0>;
-}
-
-codeview Application::WelcomePage.onTimer
-{
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,7>;
-  attr codeSelEnd = <54,8>;
-  attr codeSelStart = <54,8>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,-7>;
+  attr zoom = 1.0;
 }
 
 codeview Application::MainPage.onWelcomePageTimer
@@ -94,14 +84,38 @@ codeview Application::MainPage.onSlide
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <0,0>;
-  attr codeSelStart = <0,0>;
+  attr codeSelEnd = <30,0>;
+  attr codeSelStart = <30,0>;
 }
 
 codeview Application::MainPage.onSlide1
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <31,9>;
-  attr codeSelStart = <31,9>;
+  attr codeSelEnd = <29,0>;
+  attr codeSelStart = <29,0>;
+}
+
+codeview Application::MainPage.changePage
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,28>;
+  attr codeSelEnd = <2,26>;
+  attr codeSelStart = <2,26>;
+}
+
+codeview Application::MainPage.onEnd
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <21,0>;
+  attr codeSelStart = <21,0>;
+}
+
+codeview Application::MeasuredValues.onMeasureOperatingHours
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <71,6>;
+  attr codeSelStart = <71,6>;
 }
