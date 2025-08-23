@@ -268,8 +268,12 @@ class WelcomePage : Core::Group
     // Create the main screen dialog
     var Core::Group mainscreen = new Application::HMI;
 
-    // ... and present it
+    // Stop the splash timer
+    splashTimer.Enabled = false;
+
+    // Display the main screen
     PresentDialog( mainscreen, null, null, null, null, null, null, null, null, false );
+    // trace "onTimer is called"; // for debug
   }
 
   $rect <20,20,160,60>
@@ -462,6 +466,8 @@ class HMI : Core::Group
   object WidgetSet::HorizontalSlider HorizontalSlider
   {
     preset Bounds = <13,97,213,147>;
+    preset ClipViews = true;
+    preset OnChange = motorSlider;
     preset MaxValue = 2;
     preset CurrentValue = 1;
     preset Appearance = WidgetSet::HorizontalSlider_Lime_Small;
@@ -512,13 +518,13 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text3
   {
-    preset Bounds = <213,0,268,30>;
+    preset Bounds = <113,0,347,30>;
     preset OverflowWarning = true;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
     preset ColorTR = #000000FF;
     preset ColorTL = #000000FF;
-    preset String = "HMI";
+    preset String = "Motor Controls";
     preset Font = Resources::FontLarge;
     preset Color = #000000FF;
   }
@@ -528,4 +534,79 @@ class HMI : Core::Group
   {
     attr Bounds = <900,0,1200,200>;
   }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageGreenLed
+  {
+    preset Bounds = <395,86,445,136>;
+    preset Bitmap = Application::GreenLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageRedLed
+  {
+    preset Bounds = <395,86,445,136>;
+    preset Bitmap = Application::RedLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageTurnedOffLed
+  {
+    preset Bounds = <395,86,445,136>;
+    preset Bitmap = Application::TurnedOffLed;
+  }
+
+  $rect <530,78,730,118>
+  slot motorSlider
+  {
+    sender; /* the method is called from the sender object */
+    if (HorizontalSlider.CurrentValue == 0 || HorizontalSlider.CurrentValue == 2)
+    {
+      ImageRedLed.Visible = false;
+      ImageTurnedOffLed.Visible = false;
+      ImageGreenLed.Visible = true;
+    }
+    else if (HorizontalSlider.CurrentValue == 1)
+    {
+      ImageRedLed.Visible = false;
+      ImageTurnedOffLed.Visible = true;
+      ImageGreenLed.Visible = false;
+    }
+  }
+}
+
+$rect <550,20,750,60>
+$output false
+resource Resources::Bitmap GreenLed
+{
+  attr bitmapfile FileName = .\img\green_led.png;
+  attr bitmapformat Format = Native;
+  attr framesize FrameSize;
+  attr framedelay FrameDelay;
+  attr bitmapdithering Dithering = Auto;
+  attr bitmapmode Mode = Default;
+}
+
+$rect <550,70,750,110>
+$output false
+resource Resources::Bitmap RedLed
+{
+  attr bitmapfile FileName = .\img\red_led.png;
+  attr bitmapformat Format = Native;
+  attr framesize FrameSize;
+  attr framedelay FrameDelay;
+  attr bitmapdithering Dithering = Auto;
+  attr bitmapmode Mode = Default;
+}
+
+$rect <550,120,750,160>
+$output false
+resource Resources::Bitmap TurnedOffLed
+{
+  attr bitmapfile FileName = .\img\turned_off_led.png;
+  attr bitmapformat Format = Native;
+  attr framesize FrameSize;
+  attr framedelay FrameDelay;
+  attr bitmapdithering Dithering = Auto;
+  attr bitmapmode Mode = Default;
 }
