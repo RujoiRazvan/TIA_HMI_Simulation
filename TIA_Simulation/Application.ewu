@@ -1,29 +1,5 @@
 ﻿$version 14.05
 
-// To do:
-// 
-// - Open the 'Application' component for editing. It represents your entire GUI. \
-// Use widgets, views, event handlers and effects from the Gallery to assemble there \
-// your desired GUI look and feel.
-// 
-// - Create your own GUI components, widgets, panels, etc. The Gallery folder 'Component \
-// Templates' contains for this purpose various templates you can simply add to the \
-// unit and thus start your own component development.
-// 
-// - You can add your own bitmap and font resources to the unit. Use the templates \
-// 'Bitmap Resource' and 'Font Resource' from the Gallery folder 'Resources' for \
-// this purpose.
-// 
-// - You can add here also constants to store e.g. multilingual text fragments. Use \
-// for this purpose the template 'Constant' from the Gallery folder 'Chora'.
-// 
-// - To add an interface for communication with the target device use the template \
-// 'Device Interface' from the Gallery folder 'Device'.
-note legend Note1
-{
-  attr Bounds = <20,220,710,530>;
-}
-
 $rect <230,20,430,60>
 $output false
 resource Resources::Font Font
@@ -48,19 +24,12 @@ class MainPage : Core::Root
   $rect <500,10,700,50>
   inherited property Bounds = <0,0,480,272>;
 
-  $rect <500,110,700,150>
-  slot ConfigureText
-  {
-    /* put the welcome message to a random position */
-    trace "A";
-  }
-
   $rect <500,200,700,240>
   inherited method Init()
   {
-    // TO DO: Write your code here ...
     var Core::Group Splash = new Application::WelcomePage;
     PresentDialog( Splash, null, null, null, null, null, null, null, null, false );
+    trace "start program";
 
   }
 
@@ -77,7 +46,6 @@ class MainPage : Core::Root
   // project files is simplified.
   $member Init
   $member Bounds
-  $member ConfigureText
   $member HorizontalSlider
 }
 
@@ -260,6 +228,7 @@ class WelcomePage : Core::Group
   slot onTimer
   {
     // Determine the previously presented splash dialog
+    trace "loading screen on timer";
     var Core::Group theCurrentDialog = FindCurrentDialog();
 
     // Hide it ...
@@ -274,6 +243,7 @@ class WelcomePage : Core::Group
     // Display the main screen
     PresentDialog( mainscreen, null, null, null, null, null, null, null, null, false );
     // trace "onTimer is called"; // for debug
+
   }
 
   $rect <20,20,160,60>
@@ -285,7 +255,7 @@ class WelcomePage : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text
   {
-    preset Bounds = <103,78,411,157>;
+    preset Bounds = <86,97,394,176>;
     preset OverflowWarning = true;
     preset ColorBL = #FF3003FF;
     preset ColorBR = #FF3003FF;
@@ -465,7 +435,7 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object WidgetSet::HorizontalSlider HorizontalSlider
   {
-    preset Bounds = <13,97,213,147>;
+    preset Bounds = <20,79,220,129>;
     preset ClipViews = true;
     preset OnChange = motorSlider;
     preset MaxValue = 2;
@@ -476,7 +446,7 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text
   {
-    preset Bounds = <85,67,140,97>;
+    preset Bounds = <92,49,147,79>;
     preset OverflowWarning = true;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
@@ -490,7 +460,7 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text1
   {
-    preset Bounds = <178,67,213,97>;
+    preset Bounds = <185,49,220,79>;
     preset OverflowWarning = true;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
@@ -504,7 +474,7 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text2
   {
-    preset Bounds = <0,67,53,97>;
+    preset Bounds = <7,49,60,79>;
     preset OverflowWarning = true;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
@@ -518,8 +488,8 @@ class HMI : Core::Group
   $rect <20,20,160,60>
   object Views::Text Text3
   {
-    preset Bounds = <113,0,347,30>;
-    preset OverflowWarning = true;
+    preset Bounds = <136,3,370,33>;
+    preset OverflowWarning = false;
     preset ColorBL = #000000FF;
     preset ColorBR = #000000FF;
     preset ColorTR = #000000FF;
@@ -536,46 +506,240 @@ class HMI : Core::Group
   }
 
   $rect <20,20,160,60>
-  object Views::Image ImageGreenLed
+  object Views::Image Motor_On
   {
-    preset Bounds = <395,86,445,136>;
+    preset Bounds = <395,30,445,80>;
     preset Bitmap = Application::GreenLed;
   }
 
   $rect <20,20,160,60>
-  object Views::Image ImageRedLed
+  object Views::Image Motor_Error
   {
-    preset Bounds = <395,86,445,136>;
+    preset Bounds = <395,30,445,80>;
     preset Bitmap = Application::RedLed;
   }
 
   $rect <20,20,160,60>
-  object Views::Image ImageTurnedOffLed
+  object Views::Image Motor_Off
   {
-    preset Bounds = <395,86,445,136>;
+    preset Bounds = <395,30,445,80>;
     preset Bitmap = Application::TurnedOffLed;
   }
 
-  $rect <530,78,730,118>
+  $rect <540,10,740,50>
   slot motorSlider
   {
     sender; /* the method is called from the sender object */
     if (HorizontalSlider.CurrentValue == 0 || HorizontalSlider.CurrentValue == 2)
     {
-      ImageRedLed.Visible = false;
-      ImageTurnedOffLed.Visible = false;
-      ImageGreenLed.Visible = true;
+      Motor_Error.Visible = false;
+      Motor_Off.Visible = false;
+      Motor_On.Visible = true;
     }
     else if (HorizontalSlider.CurrentValue == 1)
     {
-      ImageRedLed.Visible = false;
-      ImageTurnedOffLed.Visible = true;
-      ImageGreenLed.Visible = false;
+      Motor_Error.Visible = false;
+      Motor_Off.Visible = true;
+      Motor_On.Visible = false;
     }
   }
+
+  $rect <20,20,160,60>
+  object Core::SlideTouchHandler ChangePageSlideGesture
+  {
+    preset Bounds = <0,0,480,272>;
+    preset OnSlide = null;
+    preset OnEnd = null;
+    preset OnStart = null;
+    preset SlideVert = false;
+    preset RetargetOffset = 0;
+    preset Friction = 0.2;
+    preset Enabled = false;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::ToggleButton ToggleButton
+  {
+    preset Bounds = <22,140,145,190>;
+    preset Label = "Out1";
+    preset Appearance = WidgetSet::Switch_Lime_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::ToggleButton ToggleButton1
+  {
+    preset Bounds = <335,140,458,190>;
+    preset Label = "Out2";
+    preset Appearance = WidgetSet::Switch_Lime_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN1_ON
+  {
+    preset Bounds = <44,212,94,262>;
+    preset Bitmap = Application::GreenLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN1_Off
+  {
+    preset Bounds = <44,212,94,262>;
+    preset Bitmap = Application::TurnedOffLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN2_ON
+  {
+    preset Bounds = <151,212,203,262>;
+    preset Bitmap = Application::GreenLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN2_Off
+  {
+    preset Bounds = <152,212,202,262>;
+    preset Bitmap = Application::TurnedOffLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN3_ON
+  {
+    preset Bounds = <274,212,324,262>;
+    preset Bitmap = Application::GreenLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN3_Off
+  {
+    preset Bounds = <274,212,324,262>;
+    preset Bitmap = Application::TurnedOffLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN4_ON
+  {
+    preset Bounds = <382,212,432,262>;
+    preset Bitmap = Application::GreenLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image IN4_Off
+  {
+    preset Bounds = <382,212,432,262>;
+    preset Bitmap = Application::TurnedOffLed;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text IN1_Text
+  {
+    preset Bounds = <2,222,55,252>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "IN1";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text IN2_Text
+  {
+    preset Bounds = <113,222,154,252>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "IN2";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text IN3_Text
+  {
+    preset Bounds = <233,222,274,252>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "IN3";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text IN4_Text
+  {
+    preset Bounds = <341,222,382,252>;
+    preset OverflowWarning = true;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "IN4";
+    preset Font = Resources::FontMedium;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton TripResetButton
+  {
+    preset Bounds = <178,140,303,190>;
+    preset OnPress = onTripResetPress;
+    preset Label = "Trip Reset";
+    preset Appearance = WidgetSet::PushButton_Mono_Medium;
+  }
+
+  $rect <542,202,742,242>
+  slot onTripResetPress
+  {
+    sender; /* the method is called from the sender object */
+  }
+
+  // Directives to adapt the order of the above members according to how these members 
+  // where arranged when the project content was stored. In this manner the storage 
+  // and the expected order of the members don't depend. Merging of changes in the 
+  // project files is simplified.
+  $member Bounds
+  $member UpdateLayout
+  $member UpdateViewState
+  $member splashTimer
+  $member onTimer
+  $member Rectangle
+  $member ChangePageSlideGesture
+  $member HorizontalSlider
+  $member Text
+  $member Text1
+  $member Text2
+  $member Text3
+  $member Note
+  $member Motor_On
+  $member Motor_Error
+  $member Motor_Off
+  $member motorSlider
+  $member ToggleButton
+  $member ToggleButton1
+  $member IN1_ON
+  $member IN1_Off
+  $member IN2_ON
+  $member IN2_Off
+  $member IN3_ON
+  $member IN3_Off
+  $member IN4_ON
+  $member IN4_Off
+  $member IN1_Text
+  $member IN2_Text
+  $member IN3_Text
+  $member IN4_Text
+  $member TripResetButton
+  $member onTripResetPress
 }
 
-$rect <550,20,750,60>
+$rect <550,60,750,100>
 $output false
 resource Resources::Bitmap GreenLed
 {
@@ -587,7 +751,7 @@ resource Resources::Bitmap GreenLed
   attr bitmapmode Mode = Default;
 }
 
-$rect <550,70,750,110>
+$rect <550,110,750,150>
 $output false
 resource Resources::Bitmap RedLed
 {
@@ -599,7 +763,7 @@ resource Resources::Bitmap RedLed
   attr bitmapmode Mode = Default;
 }
 
-$rect <550,120,750,160>
+$rect <550,160,750,200>
 $output false
 resource Resources::Bitmap TurnedOffLed
 {
@@ -609,4 +773,382 @@ resource Resources::Bitmap TurnedOffLed
   attr framedelay FrameDelay;
   attr bitmapdithering Dithering = Auto;
   attr bitmapmode Mode = Default;
+}
+
+$rect <20,200,220,240>
+$output false
+class SystemInfo : Core::Group
+{
+  $rect <20,300,220,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  $rect <10,390,210,430>
+  inherited method UpdateLayout()
+  {
+    // Always invoke the inherited method.
+    super( aSize );
+
+    /*
+
+      HINT:
+
+      This method exists for sophisticated layout calculation. Please note, that in 
+      most cases it is completely sufficient to use the views property 'Layout' to
+      determine how the view should behave when the component is resized.
+
+    */
+
+    /*
+
+      TO DO:
+
+      Put here the code to calculate new position and size of enclosed views. The
+      current (new) size of the component itself is passed in the parameter aSize.
+      For example:
+
+        SomeView.Bounds = rect( 10, 10, aSize.x - 20, aSize.y - 20 );
+
+    */
+  }
+
+  $rect <10,350,210,390>
+  inherited method UpdateViewState()
+  {
+    // Always invoke the inherited method.
+    super( aState );
+
+    /*
+
+      HINT 1:
+
+      This method is invoked automatically when the state set of the component has
+      been changed. The new state set can be found in the parameter aState.
+      Following are the important states:
+
+        Enabled   --> The component can react to user inputs.
+
+        Selected  --> The component is selected in context of its owner.
+
+        Focused   --> The component is selected in context of its owner and 
+                      the owner can react to keyboard events. In this manner the
+                      component is also able to react to keyboard events.
+
+        Modal     --> The component is modal. All events are redirected to this
+                      component.
+
+      To determine whether a state is currently active or not you have to test
+      the aState parameter. For example to test the 'Selected' state:
+
+        if ( aState.contains( Core::ViewState[ Selected ]))
+        {
+          ... yes, this component is currently selected.
+        }
+
+    */
+
+    /*
+
+      HINT 2:
+
+      Alternatively you can request this method invocation by executing explicitly
+      following code:
+
+
+        InvalidateViewState();
+
+    */
+      
+    /*
+
+      TO DO 1:
+
+      Put here the code to ensure that the visual aspect of the component does
+      reflect its current state. For example, depending on its 'Enabled' state
+      a component may appear with full colors or pale if it is disabled:
+
+        if ( aState.contains( Core::ViewState[ Enabled ]))
+        {
+          SomeBackgroundView.Opacity = 255;
+          SomeTextView.Color         = #000000FF;
+        }
+        else
+        {
+          SomeBackgroundView.Opacity = 128;
+          SomeTextView.Color         = #00000080;
+        }
+
+
+      TO DO 2:
+
+      You can evaluate here also the state of any other member in your component.
+      For example in a push-button component, the button should appear highlighted
+      as long as the user holds the finger within a touch area of the button:
+
+        if ( SomeTouchHandler.Down && SomeTouchHandler.Inside )
+          HighlightedBackground.Visible = true;
+        else
+          HighlightedBackground.Visible = false;
+
+      The touch handler itself only requests the update method to be called. Use
+      for this purpose 'InvalidateViewState()' method.
+
+
+      TO DO 3:
+
+      You can calculate here also the position/size of views accordingly to the
+      state of any other member in your component. For example in a slider you
+      can calculate the position of the slider knob from some properties like
+      'SliderValue' and 'SliderRange':
+
+        SliderKnob.Bounds.origin.x = ( SliderValue * Bounds.w ) / SliderRange;
+
+      Changing the 'SliderValue' or 'SliderRange' property should only request
+      the update method to be called. Use for this purpose 'InvalidateViewState()'
+      method.
+
+    */
+  }
+
+  $rect <920,50,1120,90>
+  object Core::Timer splashTimer
+  {
+    preset OnTrigger = onTimer;
+    preset Period = 3000;
+    preset Begin = 0;
+    preset Enabled = true;
+  }
+
+  $rect <920,100,1120,140>
+  slot onTimer
+  {
+    // Determine the previously presented splash dialog
+    var Core::Group theCurrentDialog = FindCurrentDialog();
+
+    // Hide it ...
+    DismissDialog( theCurrentDialog, null, null, null, null, null, false );
+
+    // Create the main screen dialog
+    //var Core::Root mainscreen = new Application::HMI1;
+
+    // ... and present it
+    //PresentDialog( mainscreen, null, null, null, null, null, null, null, null, false );
+  }
+
+  $rect <20,20,160,60>
+  object Views::Rectangle Rectangle
+  {
+    preset Bounds = <0,0,480,272>;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text3
+  {
+    preset Bounds = <113,0,347,30>;
+    preset OverflowWarning = false;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "System Info";
+    preset Font = Resources::FontLarge;
+    preset Color = #000000FF;
+  }
+
+  // WelcomePage Configuration
+  note group Note
+  {
+    attr Bounds = <900,0,1200,200>;
+  }
+}
+
+// Images
+note group Note
+{
+  attr Bounds = <490,20,790,230>;
+}
+
+$rect <20,260,220,300>
+$output false
+class MeasuredValues : Core::Group
+{
+  $rect <20,300,220,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  $rect <10,390,210,430>
+  inherited method UpdateLayout()
+  {
+    // Always invoke the inherited method.
+    super( aSize );
+
+    /*
+
+      HINT:
+
+      This method exists for sophisticated layout calculation. Please note, that in 
+      most cases it is completely sufficient to use the views property 'Layout' to
+      determine how the view should behave when the component is resized.
+
+    */
+
+    /*
+
+      TO DO:
+
+      Put here the code to calculate new position and size of enclosed views. The
+      current (new) size of the component itself is passed in the parameter aSize.
+      For example:
+
+        SomeView.Bounds = rect( 10, 10, aSize.x - 20, aSize.y - 20 );
+
+    */
+  }
+
+  $rect <10,350,210,390>
+  inherited method UpdateViewState()
+  {
+    // Always invoke the inherited method.
+    super( aState );
+
+    /*
+
+      HINT 1:
+
+      This method is invoked automatically when the state set of the component has
+      been changed. The new state set can be found in the parameter aState.
+      Following are the important states:
+
+        Enabled   --> The component can react to user inputs.
+
+        Selected  --> The component is selected in context of its owner.
+
+        Focused   --> The component is selected in context of its owner and 
+                      the owner can react to keyboard events. In this manner the
+                      component is also able to react to keyboard events.
+
+        Modal     --> The component is modal. All events are redirected to this
+                      component.
+
+      To determine whether a state is currently active or not you have to test
+      the aState parameter. For example to test the 'Selected' state:
+
+        if ( aState.contains( Core::ViewState[ Selected ]))
+        {
+          ... yes, this component is currently selected.
+        }
+
+    */
+
+    /*
+
+      HINT 2:
+
+      Alternatively you can request this method invocation by executing explicitly
+      following code:
+
+
+        InvalidateViewState();
+
+    */
+      
+    /*
+
+      TO DO 1:
+
+      Put here the code to ensure that the visual aspect of the component does
+      reflect its current state. For example, depending on its 'Enabled' state
+      a component may appear with full colors or pale if it is disabled:
+
+        if ( aState.contains( Core::ViewState[ Enabled ]))
+        {
+          SomeBackgroundView.Opacity = 255;
+          SomeTextView.Color         = #000000FF;
+        }
+        else
+        {
+          SomeBackgroundView.Opacity = 128;
+          SomeTextView.Color         = #00000080;
+        }
+
+
+      TO DO 2:
+
+      You can evaluate here also the state of any other member in your component.
+      For example in a push-button component, the button should appear highlighted
+      as long as the user holds the finger within a touch area of the button:
+
+        if ( SomeTouchHandler.Down && SomeTouchHandler.Inside )
+          HighlightedBackground.Visible = true;
+        else
+          HighlightedBackground.Visible = false;
+
+      The touch handler itself only requests the update method to be called. Use
+      for this purpose 'InvalidateViewState()' method.
+
+
+      TO DO 3:
+
+      You can calculate here also the position/size of views accordingly to the
+      state of any other member in your component. For example in a slider you
+      can calculate the position of the slider knob from some properties like
+      'SliderValue' and 'SliderRange':
+
+        SliderKnob.Bounds.origin.x = ( SliderValue * Bounds.w ) / SliderRange;
+
+      Changing the 'SliderValue' or 'SliderRange' property should only request
+      the update method to be called. Use for this purpose 'InvalidateViewState()'
+      method.
+
+    */
+  }
+
+  $rect <920,50,1120,90>
+  object Core::Timer splashTimer
+  {
+    preset OnTrigger = onTimer;
+    preset Period = 3000;
+    preset Begin = 0;
+    preset Enabled = true;
+  }
+
+  $rect <920,100,1120,140>
+  slot onTimer
+  {
+    // Determine the previously presented splash dialog
+    var Core::Group theCurrentDialog = FindCurrentDialog();
+
+    // Hide it ...
+    DismissDialog( theCurrentDialog, null, null, null, null, null, false );
+
+    // Create the main screen dialog
+    //var Core::Root mainscreen = new Application::HMI1;
+
+    // ... and present it
+    //PresentDialog( mainscreen, null, null, null, null, null, null, null, null, false );
+  }
+
+  $rect <20,20,160,60>
+  object Views::Rectangle Rectangle
+  {
+    preset Bounds = <0,0,480,272>;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text3
+  {
+    preset Bounds = <113,0,347,30>;
+    preset OverflowWarning = false;
+    preset ColorBL = #000000FF;
+    preset ColorBR = #000000FF;
+    preset ColorTR = #000000FF;
+    preset ColorTL = #000000FF;
+    preset String = "System Info";
+    preset Font = Resources::FontLarge;
+    preset Color = #000000FF;
+  }
+
+  // WelcomePage Configuration
+  note group Note
+  {
+    attr Bounds = <900,0,1200,200>;
+  }
 }

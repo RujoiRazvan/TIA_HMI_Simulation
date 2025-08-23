@@ -1,9 +1,9 @@
 $version 1.0
 
-attr active = Application::HMI;
+attr active = Application::WelcomePage;
 attr callStackMonitor_Show = false;
 attr connectInspectors = false;
-attr currentCodeInspector = Application::HMI.motorSlider;
+attr currentCodeInspector = Application::HMI.onTripResetPress;
 attr debug_TrackUpdates = false;
 attr extractDoc_ClassOverview = true;
 attr extractDoc_DeleteOldFiles = false;
@@ -39,68 +39,33 @@ view Project
 
 view unit Application
 {
-  attr aspectRatio = 1.0;
-  attr enableGrid = true;
   attr enableWireMode = false;
-  attr grid = 10;
-  attr scrollTo = <300,-36>;
-  attr zoom = 1.25;
-}
-
-view class Application::MainPage
-{
-  attr enableWireMode = false;
-  attr scrollTo = <-7,-239>;
-  attr zoom = 0.5;
+  attr scrollTo = <-7,-7>;
+  attr zoom = 1.0;
 }
 
 view class Application::HMI
 {
   attr enableWireMode = false;
-  attr scrollTo = <-66,-51>;
+  attr scrollTo = <-63,-25>;
+  attr zoom = 1.0;
+}
+
+view class Application::MainPage
+{
+  attr enableWireMode = false;
+  attr scrollTo = <-7,-7>;
   attr zoom = 1.0;
 }
 
 view class Application::WelcomePage
 {
   attr enableWireMode = false;
-  attr scrollTo = <-207,-7>;
-  attr zoom = 0.75;
+  attr scrollTo = <-7,-7>;
+  attr zoom = 1.0;
 }
 
-codeview Core::Group.Add
-{
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <2,1>;
-  attr codeSelStart = <2,1>;
-}
-
-codeview Application::MainPage.Init
-{
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,0>;
-  attr codeSelEnd = <21,2>;
-  attr codeSelStart = <15,2>;
-}
-
-codeview Core::Group.DismissDialog
-{
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,21>;
-  attr codeSelEnd = <2,26>;
-  attr codeSelStart = <2,26>;
-}
-
-codeview Application::WelcomePage.onTimer
-{
-  attr codeColSelect = false;
-  attr codeFirstPos = <0,5>;
-  attr codeSelEnd = <27,14>;
-  attr codeSelStart = <27,14>;
-}
-
-codeview Application::HMI.onTimer
+codeview Application::SystemInfo.UpdateViewState
 {
   attr codeColSelect = false;
   attr codeFirstPos = <0,0>;
@@ -108,10 +73,34 @@ codeview Application::HMI.onTimer
   attr codeSelStart = <0,0>;
 }
 
-codeview Application::HMI.motorSlider
+codeview Application::MainPage.Init
 {
   attr codeColSelect = false;
-  attr codeFirstPos = <0,3>;
-  attr codeSelEnd = <43,7>;
-  attr codeSelStart = <43,7>;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <22,2>;
+  attr codeSelStart = <22,2>;
+}
+
+codeview Application::SystemInfo.UpdateLayout
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <0,0>;
+  attr codeSelStart = <0,0>;
+}
+
+codeview Application::WelcomePage.onTimer
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,7>;
+  attr codeSelEnd = <32,1>;
+  attr codeSelStart = <32,1>;
+}
+
+codeview Application::HMI.onTripResetPress
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeSelEnd = <0,0>;
+  attr codeSelStart = <0,0>;
 }
