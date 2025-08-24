@@ -1,7 +1,12 @@
-site_name: My Project Docs
+site_name: MotorControlHMI Docs
 theme:
   name: material
 
 plugins:
   - search
-  - awesome-pages
+
+nav:
+  - Home: project_details.md
+  - HMI Pages:
+      - Motor Controls: motor_control.md
+      # - Measured Values: docs/measured_values.md
