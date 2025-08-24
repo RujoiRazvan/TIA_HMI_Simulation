@@ -2,7 +2,6 @@ site_name: My Project Docs
 theme:
   name: material
 
-nav:
-  - Home: index.md
-  - Motor Control:
-      - Test: motorContro/tes.md
+plugins:
+  - search
+  - awesome-pages
