@@ -6,7 +6,7 @@ plugins:
   - search
 
 nav:
-  - Home: project_details.md
+  - Home: index.md
   - HMI Pages:
       - Motor Controls: motor_control.md
       # - Measured Values: docs/measured_values.md
